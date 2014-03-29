@@ -85,10 +85,28 @@ public class NewTask extends FragmentActivity {
                 int difficulty = difficultyBar.getProgress();
 
                 // public Task(String title, Date date, int importance, int difficulty){
-                Task task = new Task(taskTitle, dueDate, importance, difficulty);
+//                Task task = new Task(taskTitle, dueDate, importance, difficulty);
 
+                boolean worked = true;
+                try {
+                    TasksDB tasksEntry = new TasksDB(NewTask.this);
+                    tasksEntry.open();
+                    tasksEntry.createEntry(taskTitle, "category", "date", importance, difficulty);
+                    tasksEntry.close();
+                } catch (Exception e) {
+                    worked = false;
+                } finally {
+                    if (worked) {
+                        Dialog dialog = new Dialog(NewTask.this);
+                        dialog.setTitle("Worked");
+                        TextView tv = new TextView(NewTask.this);
+                        tv.setText("Success");
+                        dialog.setContentView(tv);
+                        dialog.show();
+                    }
+                }
 
-                startActivity(intent);
+                //startActivity(intent);
             }
         });
 
