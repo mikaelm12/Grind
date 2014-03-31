@@ -14,6 +14,13 @@ public class Task {
     public Date dueDate;
     public int Score;
 
+
+    public Task(String title, String date, int importance, int difficulty){
+        this.title = title;
+        this.difficulty = difficulty;
+        this.importance = importance;
+    }
+
     public Task(String title, Date date, int importance, int difficulty){
         this.title = title;
         this.dueDate = date;
@@ -66,6 +73,10 @@ public class Task {
 
     public void calculateScore(){
 
+    }
+
+    public String toString() {
+        return "Title: " + title + " difficulty: " + difficulty + " importance: " + importance;
     }
 
 

@@ -2,10 +2,14 @@ package com.b6west.grind;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sabrinadrammis on 3/29/14.
@@ -79,5 +83,50 @@ public class TasksDB {
         contentValues.put(KEY_IMPORTANCE, importance);
         contentValues.put(KEY_DIFFICULTY, difficulty);
         return database.insert(DATABASE_TABLE, null, contentValues);
+    }
+
+
+    public List<Task> getData(TaskScreen.Order order) {
+        String[] columns = new String[]{ KEY_TITLE, KEY_CATEGORY, KEY_DATE, KEY_IMPORTANCE, KEY_DIFFICULTY};
+        List<Task> fetch = new ArrayList<Task>();
+
+        Cursor cursor = null;
+
+        switch (order) {
+            case none:
+                cursor = database.query(DATABASE_TABLE, columns, null, null, null, null, null);
+                break;
+            case title:
+                cursor = database.query(DATABASE_TABLE, columns, null, null, null, null, KEY_TITLE);
+                break;
+            case date:
+                break;
+            case difficulty:
+                break;
+            case importance:
+                break;
+            default:
+                cursor = database.query(DATABASE_TABLE, columns, null, null, null, null, null);
+                break;
+        }
+
+        int iTitle = cursor.getColumnIndex(KEY_TITLE);
+        int iCategory= cursor.getColumnIndex(KEY_CATEGORY);
+        int iDate = cursor.getColumnIndex(KEY_DATE);
+        int iDifficulty = cursor.getColumnIndex(KEY_DIFFICULTY);
+        int iImportance = cursor.getColumnIndex(KEY_IMPORTANCE);
+
+
+        //do these for everything
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            //add to data
+            Task task = new Task(cursor.getString(iTitle), cursor.getString(iDate),
+                                    cursor.getInt(iImportance), cursor.getInt(iDifficulty));
+            fetch.add(task);
+        }
+        Log.w(fetch.toString() + "fetch", "Grind");
+
+        return fetch;
     }
 }

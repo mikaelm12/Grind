@@ -89,6 +89,7 @@ public class NewTask extends FragmentActivity {
 
                 boolean worked = true;
                 try {
+                    //need to add algorithm score and calculate and add that to database here
                     TasksDB tasksEntry = new TasksDB(NewTask.this);
                     tasksEntry.open();
                     tasksEntry.createEntry(taskTitle, "category", "date", importance, difficulty);

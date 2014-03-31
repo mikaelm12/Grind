@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,11 +18,19 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.sql.SQLException;
+import java.util.List;
+
 public class TaskScreen extends ActionBarActivity {
+
+
+
 
     ListView taskList;
     TextView addTaskPrompt;
     Button addTask;
+
+    public enum Order { none, title, difficulty, importance, date};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,19 @@ public class TaskScreen extends ActionBarActivity {
         if(taskList.getCount()== 0){
            addTaskPrompt.setEnabled(true);
         }
+
+
+        TasksDB info = new TasksDB(this); //need this to be activity class to work
+        try {
+            info.open();
+            List<Task> data = info.getData(Order.none);
+            Log.w(data.toString(), "Grind");
+            info.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
