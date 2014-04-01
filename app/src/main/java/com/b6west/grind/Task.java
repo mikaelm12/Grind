@@ -1,6 +1,6 @@
 package com.b6west.grind;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by mikemikael3 on 3/27/14.
@@ -15,16 +15,13 @@ public class Task {
     public int Score;
 
 
-    public Task(String title, String date, int importance, int difficulty){
+    public Task(String title, Date date, int importance, int difficulty){
         this.title = title;
         this.difficulty = difficulty;
         this.importance = importance;
-    }
-
-    public Task(String title, Date date, int importance, int difficulty){
-        this.title = title;
         this.dueDate = date;
     }
+
     public Task(String title, int importance, int difficulty){
         this.title = title;
         this.importance = importance;

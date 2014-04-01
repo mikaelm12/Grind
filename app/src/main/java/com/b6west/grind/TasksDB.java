@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -121,8 +123,10 @@ public class TasksDB {
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             //add to data
-            Task task = new Task(cursor.getString(iTitle), cursor.getString(iDate),
-                                    cursor.getInt(iImportance), cursor.getInt(iDifficulty));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(cursor.getString(iDate), null);
+
+            Task task = new Task(cursor.getString(iTitle), date, cursor.getInt(iImportance), cursor.getInt(iDifficulty));
             fetch.add(task);
         }
         Log.w(fetch.toString() + "fetch", "Grind");
