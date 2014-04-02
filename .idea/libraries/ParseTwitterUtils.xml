@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="ParseTwitterUtils">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/app/src/main/libs/Parse-1.4.2-javadoc/com/parse/ParseTwitterUtils.html" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,34 +1,31 @@
 package com.b6west.grind;
 
-import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.sql.SQLException;
-import java.util.List;
+import com.b6west.grind.database.TaskDatabaseHelper;
+
+import java.util.ArrayList;
 
 public class TaskScreen extends ActionBarActivity {
-
-
-
-
     ListView taskList;
     TextView addTaskPrompt;
     Button addTask;
+
+    private TaskDatabaseHelper dbHelper;
+    private SQLiteDatabase database;
+    private ArrayList<String> taskID = new ArrayList<String>();
+    private ArrayList<String> taskTitle = new ArrayList<String>();
 
     public enum Order { none, title, difficulty, importance, date};
 
@@ -49,24 +46,36 @@ public class TaskScreen extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+
         if(taskList.getCount()== 0){
            addTaskPrompt.setEnabled(true);
         }
 
+        dbHelper = new TaskDatabaseHelper(this);
+        displayData();
 
-//        TasksDB info = new TasksDB(this); //need this to be activity class to work
-//        try {
-//            info.open();
-//            List<Task> data = info.getData(Order.none);
-//            Log.w(data.toString(), "Grind");
-//            info.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-
-
+        //initialize Parse
+        //probably not going to use Parse at allf
+//        Parse.initialize(this, "unglciIFqSiLlkBuzEpkOlE4eQhoq7FWqGDFLmaA", "Tx1sNxriLDdElnXgTKZrLZ9hN8zlOkAUBiUu3PnC");
     }
 
+    /**
+     * displays data from SQLite
+     */
+    private void displayData() {
+        database = dbHelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery("SELECT * FROM " + dbHelper.TABLE_TASK, null);
+
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            Log.w("Grind", cursor.getString(cursor.getColumnIndex(dbHelper.KEY_ID)) + " , " +
+                    cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)) + " , " +
+                    cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)) + " , " +
+                    cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_IMPORTANCE)) + " , ");
+        }
+
+        cursor.close();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

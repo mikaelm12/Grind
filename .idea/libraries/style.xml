@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="style">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/app/src/main/libs/Parse-1.4.2-javadoc/style.css" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
