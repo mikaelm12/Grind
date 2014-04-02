@@ -112,6 +112,7 @@ public class TasksDB {
                 break;
         }
 
+        int iID = cursor.getColumnIndex(KEY_ID);
         int iTitle = cursor.getColumnIndex(KEY_TITLE);
         int iCategory= cursor.getColumnIndex(KEY_CATEGORY);
         int iDate = cursor.getColumnIndex(KEY_DATE);
@@ -126,11 +127,16 @@ public class TasksDB {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date date = sdf.parse(cursor.getString(iDate), null);
 
-            Task task = new Task(cursor.getString(iTitle), date, cursor.getInt(iImportance), cursor.getInt(iDifficulty));
+            Task task = new Task(cursor.getInt(iID), cursor.getString(iTitle), date, cursor.getInt(iImportance), cursor.getInt(iDifficulty));
             fetch.add(task);
         }
         Log.w(fetch.toString() + "fetch", "Grind");
 
         return fetch;
+    }
+
+    public boolean deleteEntry(int id)
+    {
+        return database.delete(DATABASE_TABLE, KEY_ID + "=" + id, null) > 0;
     }
 }

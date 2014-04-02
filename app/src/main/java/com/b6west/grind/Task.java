@@ -7,6 +7,7 @@ import java.util.Date;
  */
 public class Task {
 
+    public int id;
     public String title;
     public int difficulty = 0;
     public int importance = 0;
@@ -15,14 +16,14 @@ public class Task {
     public int Score;
 
 
-    public Task(String title, Date date, int importance, int difficulty){
+    public Task(int id, String title, Date date, int importance, int difficulty){
         this.title = title;
         this.difficulty = difficulty;
         this.importance = importance;
         this.dueDate = date;
     }
 
-    public Task(String title, int importance, int difficulty){
+    public Task(int id, String title, int importance, int difficulty){
         this.title = title;
         this.importance = importance;
         this.difficulty = difficulty;

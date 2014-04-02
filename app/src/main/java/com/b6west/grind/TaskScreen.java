@@ -54,15 +54,15 @@ public class TaskScreen extends ActionBarActivity {
         }
 
 
-        TasksDB info = new TasksDB(this); //need this to be activity class to work
-        try {
-            info.open();
-            List<Task> data = info.getData(Order.none);
-            Log.w(data.toString(), "Grind");
-            info.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        TasksDB info = new TasksDB(this); //need this to be activity class to work
+//        try {
+//            info.open();
+//            List<Task> data = info.getData(Order.none);
+//            Log.w(data.toString(), "Grind");
+//            info.close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
 
     }
