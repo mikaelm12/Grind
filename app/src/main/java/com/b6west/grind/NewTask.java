@@ -85,10 +85,32 @@ public class NewTask extends FragmentActivity {
                 int difficulty = difficultyBar.getProgress();
 
                 // public Task(String title, Date date, int importance, int difficulty){
-                Task task = new Task(taskTitle, dueDate, importance, difficulty);
+//                Task task = new Task(taskTitle, dueDate, importance, difficulty);
 
+                //adding to the database
+                boolean worked = true;
+                try {
+                    //need to add algorithm score and calculate and add that to database here
+                    TasksDB tasksEntry = new TasksDB(NewTask.this);
+                    tasksEntry.open();
+                    tasksEntry.createEntry(taskTitle, "category", "2014-05-27", importance, difficulty);
+                    //for date
+                    //http://stackoverflow.com/questions/16739836/how-to-add-date-in-sqlite-database
+                    tasksEntry.close();
+                } catch (Exception e) {
+                    worked = false;
+                } finally {
+                    if (worked) {
+                        Dialog dialog = new Dialog(NewTask.this);
+                        dialog.setTitle("Worked");
+                        TextView tv = new TextView(NewTask.this);
+                        tv.setText("Success");
+                        dialog.setContentView(tv);
+                        dialog.show();
+                    }
+                }
 
-                startActivity(intent);
+                //startActivity(intent);
             }
         });
 
