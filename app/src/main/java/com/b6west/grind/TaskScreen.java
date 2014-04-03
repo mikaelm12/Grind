@@ -1,8 +1,10 @@
 package com.b6west.grind;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 public class TaskScreen extends ActionBarActivity {
     ListView taskList;
     TextView addTaskPrompt;
-    Button addTask;
+
 
     private TaskDatabaseHelper dbHelper;
     private SQLiteDatabase database;
@@ -30,6 +32,7 @@ public class TaskScreen extends ActionBarActivity {
 
     public enum Order { none, title, difficulty, importance, date};
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,24 +42,21 @@ public class TaskScreen extends ActionBarActivity {
 
         addTaskPrompt = (TextView)findViewById(R.id.tvAddTaskPrompt);
 
-        addTask = (Button)findViewById(R.id.bAddTask);
-        addTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(TaskScreen.this, NewTask.class);
-                startActivity(intent);
-            }
-        });
 
-        if(taskList.getCount()== 0){
-           addTaskPrompt.setEnabled(true);
-        }
+
 
         dbHelper = new TaskDatabaseHelper(this);
         displayData();
 
         ArrayAdapter<Task> adapter  = new ArrayAdapter<Task>(this,android.R.layout.simple_list_item_1,tasks);
         taskList.setAdapter(adapter);
+        if(taskList.getCount()== 0){
+            addTaskPrompt.setText("Add a task!");
+        }
+        else{
+            addTaskPrompt.setHeight(0);
+            addTaskPrompt.setWidth(0);
+        }
 
         //initialize Parse
         //for analytics if we need it
@@ -102,7 +102,9 @@ public class TaskScreen extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_create) {
+            Intent intent = new Intent(TaskScreen.this, NewTask.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

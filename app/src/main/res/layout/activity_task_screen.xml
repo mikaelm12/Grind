@@ -7,14 +7,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.b6west.grind.TaskScreen$PlaceholderFragment">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id = "@+id/bAddTask"
-        android:text="Add Task"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/lvTaskList"
-        android:layout_alignEnd="@+id/lvTaskList" />
+
 
     <ListView
         android:layout_width="wrap_content"
@@ -27,7 +20,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add a new task!"
+
         android:textSize="20pt"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
@@ -35,7 +28,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:enabled="false"/>
+        />
 
 
 </RelativeLayout>

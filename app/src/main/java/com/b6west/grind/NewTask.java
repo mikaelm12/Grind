@@ -17,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.b6west.grind.database.TaskDatabaseHelper;
 
@@ -41,7 +42,7 @@ public class NewTask extends FragmentActivity {
     TextView difficultyPrompt;
     SeekBar difficultyBar;
 
-    Button bDate;
+    Button Done;
 
     private TaskDatabaseHelper dbHelper;
     private SQLiteDatabase database;
@@ -49,10 +50,40 @@ public class NewTask extends FragmentActivity {
     private boolean isUpdate;
 
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addtaskactivity);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        //Importance initialization
+        importancePrompt = (TextView)findViewById(R.id.tvImportance);
+        importanceBar = (SeekBar)findViewById(R.id.sbImportance);
+        importanceBar.setMax(10);
+
+        importanceBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Toast.makeText(NewTask.this, "" + seekBar.getProgress(), Toast.LENGTH_SHORT);
+            }
+        });
+
+
+        // Difficulty initialization
+        difficultyPrompt = (TextView)findViewById(R.id.tvDifficulty);
+        difficultyBar = (SeekBar)findViewById(R.id.sbDifficulty);
+        difficultyBar.setMax(10);
 
         dbHelper = new TaskDatabaseHelper(this);
 
@@ -71,21 +102,12 @@ public class NewTask extends FragmentActivity {
             }
         });
 
-    //Importance initialization
-        importancePrompt = (TextView)findViewById(R.id.tvImportance);
-        importanceBar = (SeekBar)findViewById(R.id.sbImportance);
-        importanceBar.setMax(10);
-        importanceBar.setProgress(2);
 
-    // Difficulty initialization
-        difficultyPrompt = (TextView)findViewById(R.id.tvDifficulty);
-        difficultyBar = (SeekBar)findViewById(R.id.sbDifficulty);
-        difficultyBar.setMax(10);
-        difficultyBar.setProgress(3);
+
 
     //Done!
-        bDate = (Button)findViewById(R.id.bDone);
-        bDate.setOnClickListener(new View.OnClickListener() {
+        Done = (Button)findViewById(R.id.bDone);
+        Done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(NewTask.this, TaskScreen.class);
@@ -96,6 +118,8 @@ public class NewTask extends FragmentActivity {
 
                 int importance = importanceBar.getProgress();
                 int difficulty = difficultyBar.getProgress();
+                Log.d("SEEK", "Test: " + importanceBar.getProgress());
+                Log.d("SEEK", "Test: " + difficultyBar.getProgress());
 
                 // public Task(String title, Date date, int importance, int difficulty){
 //                Task task = new Task(taskTitle, dueDate, importance, difficulty);
