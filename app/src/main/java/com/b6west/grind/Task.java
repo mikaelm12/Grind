@@ -11,12 +11,13 @@ public class Task {
     public String title;
     public int difficulty = 0;
     public int importance = 0;
-    public String catagory;
+    public String category;
     public Date dueDate;
     public int Score;
 
 
     public Task(int id, String title, Date date, int importance, int difficulty){
+        this.id = id;
         this.title = title;
         this.difficulty = difficulty;
         this.importance = importance;
@@ -24,10 +25,13 @@ public class Task {
     }
 
     public Task(int id, String title, int importance, int difficulty){
+        this.id = id;
         this.title = title;
         this.importance = importance;
         this.difficulty = difficulty;
     }
+
+    public int getId() { return id; }
 
     public Date getDueDate() {
         return dueDate;
@@ -37,12 +41,12 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-    public String getCatagory() {
-        return catagory;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCatagory(String catagory) {
-        this.catagory = catagory;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public int getImportance() {
@@ -74,7 +78,7 @@ public class Task {
     }
 
     public String toString() {
-        return "Title: " + title + "duedate: " + dueDate + " difficulty: " + difficulty + " importance: " + importance;
+        return "Title: " + title + " duedate: " + dueDate + " difficulty: " + difficulty + " importance: " + importance;
     }
 
 
