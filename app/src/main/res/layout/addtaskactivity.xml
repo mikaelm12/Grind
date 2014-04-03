@@ -49,6 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_below="@id/tvImportance"
+        android:max="10"
         android:id="@+id/sbImportance"/>
     <TextView
         android:layout_width="match_parent"
@@ -56,6 +57,7 @@
         android:layout_marginTop="20dp"
         android:layout_below="@+id/sbImportance"
         android:text="Difficulty"
+        android:max="10"
         android:id="@+id/tvDifficulty"/>
     <SeekBar
         android:layout_width="match_parent"

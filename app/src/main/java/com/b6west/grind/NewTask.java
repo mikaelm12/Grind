@@ -60,7 +60,6 @@ public class NewTask extends FragmentActivity {
         //Importance initialization
         importancePrompt = (TextView)findViewById(R.id.tvImportance);
         importanceBar = (SeekBar)findViewById(R.id.sbImportance);
-        importanceBar.setMax(10);
 
         importanceBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -79,19 +78,33 @@ public class NewTask extends FragmentActivity {
             }
         });
 
-
         // Difficulty initialization
         difficultyPrompt = (TextView)findViewById(R.id.tvDifficulty);
         difficultyBar = (SeekBar)findViewById(R.id.sbDifficulty);
-        difficultyBar.setMax(10);
+        difficultyBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         dbHelper = new TaskDatabaseHelper(this);
 
-    //Task Name Initialization
+        //Task Name Initialization
         TaskNamePrompt = (TextView)findViewById(R.id.tvEnterTaskName);
         enterTaskName = (EditText)findViewById(R.id.etTaskName);
 
-    // Date Stuff Initialization
+        // Date Stuff Initialization
         setDatePrompt = (TextView)findViewById(R.id.tvSetDate);
         date = (Button)findViewById(R.id.bDate);
         date.setOnClickListener(new View.OnClickListener() {
