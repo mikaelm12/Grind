@@ -8,17 +8,22 @@ import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.b6west.grind.database.TaskDatabaseHelper;
-import com.parse.Parse;
-import com.parse.ParseAnalytics;
+//import com.parse.Parse;
+//import com.parse.ParseAnalytics;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,6 +53,42 @@ public class TaskScreen extends ActionBarActivity {
 
         taskList = (ListView)findViewById(R.id.lvTaskList);
 
+        taskList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        taskList.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
+
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+
+                MenuInflater inflater = actionMode.getMenuInflater();
+                inflater.inflate(R.menu.task_list_context, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode actionMode, MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menu_delete_task:
+
+                        //Delete from data base and notify adapter of change
+                }
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode actionMode) {
+
+            }
+        });
+
         addTaskPrompt = (TextView)findViewById(R.id.tvAddTaskPrompt);
 
 
@@ -56,8 +97,13 @@ public class TaskScreen extends ActionBarActivity {
         dbHelper = new TaskDatabaseHelper(this);
         displayData();
 
-        ArrayAdapter<Task> adapter  = new ArrayAdapter<Task>(this,android.R.layout.simple_list_item_1,tasks);
-        taskList.setAdapter(adapter);
+        TaskAdapter taskAdapter = new TaskAdapter(tasks);
+        taskList.setAdapter(taskAdapter);
+
+
+
+       // ArrayAdapter<Task> adapter  = new ArrayAdapter<Task>(this,android.R.layout.simple_list_item_1,tasks);
+        //taskList.setAdapter(adapter);
         if(taskList.getCount()== 0){
             addTaskPrompt.setText("Add a task!");
         }
@@ -66,10 +112,14 @@ public class TaskScreen extends ActionBarActivity {
             addTaskPrompt.setWidth(0);
         }
 
+
+
+
+
         //initialize Parse
         //for analytics if we need it
-        Parse.initialize(this, "unglciIFqSiLlkBuzEpkOlE4eQhoq7FWqGDFLmaA", "Tx1sNxriLDdElnXgTKZrLZ9hN8zlOkAUBiUu3PnC");
-        ParseAnalytics.trackAppOpened(getIntent());
+       // Parse.initialize(this, "unglciIFqSiLlkBuzEpkOlE4eQhoq7FWqGDFLmaA", "Tx1sNxriLDdElnXgTKZrLZ9hN8zlOkAUBiUu3PnC");
+       // ParseAnalytics.trackAppOpened(getIntent());
     }
 
     /**
@@ -111,6 +161,41 @@ public class TaskScreen extends ActionBarActivity {
         cursor.close();
     }
 
+
+    private class TaskAdapter extends ArrayAdapter<Task>{
+
+        TextView taskTitle;
+        CheckBox completed;
+        TextView date;
+
+
+        public TaskAdapter(ArrayList<Task> taskArrayList){
+            super(TaskScreen.this, 0 ,taskArrayList );
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView== null){
+                convertView = TaskScreen.this.getLayoutInflater().inflate(R.layout.task_row,null);
+            }
+
+            Task task = getItem(position);
+
+            //Setting task title
+            taskTitle = (TextView)convertView.findViewById(R.id.tvTaskTitle);
+            taskTitle.setText(task.getTitle());
+
+            //Setting task date
+
+           date = (TextView)convertView.findViewById(R.id.tvTaskDate);
+           date.setText(task.getDueDate().toString());
+
+            return convertView;
+
+
+
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
