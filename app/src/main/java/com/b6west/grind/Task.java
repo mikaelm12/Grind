@@ -74,7 +74,7 @@ public class Task {
     }
 
     public String toString() {
-        return "Title: " + title + " difficulty: " + difficulty + " importance: " + importance;
+        return "Title: " + title + "duedate: " + dueDate + " difficulty: " + difficulty + " importance: " + importance;
     }
 
 

@@ -19,6 +19,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.SQLInput.*;
+
 import com.b6west.grind.database.TaskDatabaseHelper;
 
 import java.util.Calendar;
@@ -38,9 +40,11 @@ public class NewTask extends FragmentActivity {
 
     TextView importancePrompt;
     SeekBar importanceBar;
+    int importance = 0;
 
     TextView difficultyPrompt;
     SeekBar difficultyBar;
+    int difficulty = 0;
 
     Button Done;
 
@@ -64,20 +68,17 @@ public class NewTask extends FragmentActivity {
         importanceBar = (SeekBar)findViewById(R.id.sbImportance);
 
         importanceBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                importance = progress;
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(NewTask.this, "" + seekBar.getProgress(), Toast.LENGTH_SHORT);
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
         // Difficulty initialization
@@ -86,21 +87,16 @@ public class NewTask extends FragmentActivity {
         difficultyBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                difficulty = progress;
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
-        dbHelper = new TaskDatabaseHelper(this);
 
         //Task Name Initialization
         TaskNamePrompt = (TextView)findViewById(R.id.tvEnterTaskName);
@@ -118,9 +114,10 @@ public class NewTask extends FragmentActivity {
         });
 
 
+        //initialize database helper
+        dbHelper = new TaskDatabaseHelper(this);
 
-
-    //Done!
+        //Done!
         Done = (Button)findViewById(R.id.bDone);
         Done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,15 +128,11 @@ public class NewTask extends FragmentActivity {
                 //Extracting the user input values
                 String taskTitle = enterTaskName.getText().toString();
 
-                int importance = importanceBar.getProgress();
-                int difficulty = difficultyBar.getProgress();
-                Log.d("SEEK", "Test: " + importanceBar.getProgress());
-                Log.d("SEEK", "Test: " + difficultyBar.getProgress());
+                Log.d("Grind", "Test: " + importanceBar.getProgress());
+                Log.d("Grind", "Test: " + difficultyBar.getProgress());
 
-                // public Task(String title, Date date, int importance, int difficulty){
-//                Task task = new Task(taskTitle, dueDate, importance, difficulty);
 
-                saveData(taskTitle, dateString, "", importance, difficulty, 0);
+                saveData(taskTitle, dateString, "", importanceBar.getProgress(), difficultyBar.getProgress(), 0);
 
                 startActivity(intent);
             }
@@ -155,6 +148,7 @@ public class NewTask extends FragmentActivity {
     public void populateSetDate(int year, int month, int day) {
         date.setText(month + "/" + day + "/" + year);
 
+        //update the date string, must format yyyy-MM-dd
         if (month < 10 && day < 10) {
             dateString = year + "-" + "0" + month + "-" + "0" + day;
         } else if (month < 10) {
@@ -182,8 +176,12 @@ public class NewTask extends FragmentActivity {
         ContentValues values = new ContentValues();
 
         values.put(TaskDatabaseHelper.KEY_TITLE, title);
+        values.put(TaskDatabaseHelper.KEY_DATE, due_date);
+        values.put(TaskDatabaseHelper.KEY_CATEGORY, category);
+        values.put(TaskDatabaseHelper.KEY_IMPORTANCE, importance);
+        values.put(TaskDatabaseHelper.KEY_DIFFICULTY, difficulty);
+        values.put(TaskDatabaseHelper.KEY_COMPLETED, completed);
 
-        Log.w("Grind", title);
 
         if(isUpdate)
         {

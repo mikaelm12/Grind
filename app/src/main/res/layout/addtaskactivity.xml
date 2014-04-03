@@ -57,13 +57,13 @@
         android:layout_marginTop="20dp"
         android:layout_below="@+id/sbImportance"
         android:text="Difficulty"
-        android:max="10"
         android:id="@+id/tvDifficulty"/>
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/sbDifficulty"
+        android:max="10"
         android:layout_below="@+id/tvDifficulty"/>
    <Button
        android:layout_width="match_parent"

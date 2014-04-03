@@ -89,7 +89,7 @@ public class TaskScreen extends ActionBarActivity {
                         cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)),
                         cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_IMPORTANCE)),
                         cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)));
-
+                Log.w("Grind", task.difficulty + "");
                 tasks.add(task);
             } else {
                 try {
