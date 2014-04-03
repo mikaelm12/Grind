@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="third_party_licenses">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/app/src/main/libs/third_party_licenses.txt" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

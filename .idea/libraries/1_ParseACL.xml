@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="1_ParseACL">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/app/src/main/libs/Parse-1.4.2-javadoc/com/parse/class-use/ParseACL.html" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

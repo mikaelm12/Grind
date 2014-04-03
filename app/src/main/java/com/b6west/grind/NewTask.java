@@ -4,10 +4,13 @@ import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -15,7 +18,11 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.b6west.grind.database.TaskDatabaseHelper;
+
 import java.util.Calendar;
+
+
 
 /**
  * Created by mikemikael3 on 3/27/14.
@@ -36,11 +43,18 @@ public class NewTask extends FragmentActivity {
 
     Button bDate;
 
+    private TaskDatabaseHelper dbHelper;
+    private SQLiteDatabase database;
+    private String id,title;
+    private boolean isUpdate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.addtaskactivity);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.addtaskactivity);
+
+        dbHelper = new TaskDatabaseHelper(this);
 
     //Task Name Initialization
         TaskNamePrompt = (TextView)findViewById(R.id.tvEnterTaskName);
@@ -78,7 +92,6 @@ public class NewTask extends FragmentActivity {
 
 
                 //Extracting the user input values
-
                 String taskTitle = enterTaskName.getText().toString();
 
                 int importance = importanceBar.getProgress();
@@ -87,30 +100,9 @@ public class NewTask extends FragmentActivity {
                 // public Task(String title, Date date, int importance, int difficulty){
 //                Task task = new Task(taskTitle, dueDate, importance, difficulty);
 
-                //adding to the database
-                boolean worked = true;
-                try {
-                    //need to add algorithm score and calculate and add that to database here
-                    TasksDB tasksEntry = new TasksDB(NewTask.this);
-                    tasksEntry.open();
-                    tasksEntry.createEntry(taskTitle, "category", "2014-05-27", importance, difficulty);
-                    //for date
-                    //http://stackoverflow.com/questions/16739836/how-to-add-date-in-sqlite-database
-                    tasksEntry.close();
-                } catch (Exception e) {
-                    worked = false;
-                } finally {
-                    if (worked) {
-                        Dialog dialog = new Dialog(NewTask.this);
-                        dialog.setTitle("Worked");
-                        TextView tv = new TextView(NewTask.this);
-                        tv.setText("Success");
-                        dialog.setContentView(tv);
-                        dialog.show();
-                    }
-                }
+                saveData(taskTitle, "yyyy-MM-dd", "", importance, difficulty, 0);
 
-                //startActivity(intent);
+                startActivity(intent);
             }
         });
 
@@ -125,10 +117,40 @@ public class NewTask extends FragmentActivity {
 
         date.setText(month + "/" + day + "/" + year);
     }
-   
 
 
+    /**
+     * Save new task to SQLite
+     *
+     * @param title any non null title
+     * @param due_date string in the format "yyyy-MM-dd"
+     * @param category string of an existing category
+     * @param importance range 1 to 10
+     * @param difficulty range from 1 to 10
+     * @param completed 0 for not completed, 1 for completed
+     */
+    private void saveData(String title, String due_date, String category, int importance, int difficulty, int completed){
+        database = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
+        values.put(TaskDatabaseHelper.KEY_TITLE, title);
+
+        Log.w("Grind", title);
+
+        if(isUpdate)
+        {
+            //update database with new data
+            database.update(TaskDatabaseHelper.TABLE_TASK, values, TaskDatabaseHelper.KEY_ID + "=" + id, null);
+        }
+        else
+        {
+            //insert data into database
+            database.insert(TaskDatabaseHelper.TABLE_TASK, null, values);
+        }
+        //close database
+        database.close();
+        finish();
+    }
 
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)

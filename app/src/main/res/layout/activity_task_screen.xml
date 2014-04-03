@@ -21,7 +21,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/lvTaskList"
         android:layout_alignParentLeft="true"
-        android:layout_above="@+id/bAddTask" />
+        android:layout_above="@+id/bAddTask"
+        android:layout_below="@+id/tvAddTaskPrompt" />
 
     <TextView
         android:layout_width="match_parent"
