@@ -11,7 +11,7 @@ import android.util.Log;
 public class TaskDatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_TASK = "tasksTable";
 
-    public static final String KEY_ID = "id";
+    public static final String KEY_ID = "_id";
     public static final String KEY_TITLE = "title";
     public static final String KEY_DATE = "due_date";
     public static final String KEY_CATEGORY = "category";
@@ -20,7 +20,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
     public static final String KEY_COMPLETED = "completed";
 
     private static final String DATABASE_NAME = "tasktable.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String DATABASE_CREATE = "CREATE TABLE " + TABLE_TASK + " (" +
             KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -45,7 +45,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w("Grind", "onupgrade");
 
-        if (oldVersion == 1 || oldVersion == 2) {
+        if (oldVersion == 1) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASK);
             onCreate(db);
         }

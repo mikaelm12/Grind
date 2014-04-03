@@ -13,8 +13,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+
+import android.widget.AdapterView;
+
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -92,8 +96,6 @@ public class TaskScreen extends ActionBarActivity {
         addTaskPrompt = (TextView)findViewById(R.id.tvAddTaskPrompt);
 
 
-
-
         dbHelper = new TaskDatabaseHelper(this);
         displayData();
 
@@ -114,6 +116,20 @@ public class TaskScreen extends ActionBarActivity {
 
 
 
+        taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(TaskScreen.this, NewTask.class);
+                Task selectedTask = (Task) parent.getItemAtPosition(position);
+                intent.putExtra("update", true);
+                intent.putExtra("id", selectedTask.getId());
+                intent.putExtra("title", selectedTask.getTitle());
+                if (selectedTask.getDueDate() != null) { intent.putExtra("dueDate", selectedTask.getDueDate()); }
+                intent.putExtra("importance", selectedTask.getImportance());
+                intent.putExtra("difficulty", selectedTask.getDifficulty());
+                startActivity(intent);
+            }
+        });
 
 
         //initialize Parse
@@ -139,7 +155,6 @@ public class TaskScreen extends ActionBarActivity {
                         cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)),
                         cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_IMPORTANCE)),
                         cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)));
-                Log.w("Grind", task.difficulty + "");
                 tasks.add(task);
             } else {
                 try {
@@ -212,6 +227,7 @@ public class TaskScreen extends ActionBarActivity {
         int id = item.getItemId();
         if (id == R.id.action_create) {
             Intent intent = new Intent(TaskScreen.this, NewTask.class);
+            intent.putExtra("update", false);
             startActivity(intent);
             return true;
         }

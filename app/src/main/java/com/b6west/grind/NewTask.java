@@ -24,7 +24,7 @@ import java.sql.SQLInput.*;
 import com.b6west.grind.database.TaskDatabaseHelper;
 
 import java.util.Calendar;
-
+import java.util.Date;
 
 
 /**
@@ -40,11 +40,9 @@ public class NewTask extends FragmentActivity {
 
     TextView importancePrompt;
     SeekBar importanceBar;
-    int importance = 0;
 
     TextView difficultyPrompt;
     SeekBar difficultyBar;
-    int difficulty = 0;
 
     Button Done;
 
@@ -52,8 +50,8 @@ public class NewTask extends FragmentActivity {
 
     private TaskDatabaseHelper dbHelper;
     private SQLiteDatabase database;
-    private String id,title;
-    private boolean isUpdate;
+    private int id;
+    private boolean isUpdate = false;
 
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -70,9 +68,7 @@ public class NewTask extends FragmentActivity {
         importanceBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                importance = progress;
-            }
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) { }
@@ -86,9 +82,7 @@ public class NewTask extends FragmentActivity {
         difficultyBar = (SeekBar)findViewById(R.id.sbDifficulty);
         difficultyBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                difficulty = progress;
-            }
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) { }
@@ -117,6 +111,25 @@ public class NewTask extends FragmentActivity {
         //initialize database helper
         dbHelper = new TaskDatabaseHelper(this);
 
+        //if updating
+        isUpdate = getIntent().getExtras().getBoolean("update");
+        if (isUpdate) {
+            //get selected task ID
+            id = getIntent().getExtras().getInt("id");
+            Log.w("Grind", "selected id: " + id);
+            //update the newTask to display the values of the selected task from main list view
+            enterTaskName.setText(getIntent().getExtras().getString("title"));
+            importanceBar.setProgress(getIntent().getExtras().getInt("importance"));
+            difficultyBar.setProgress(getIntent().getExtras().getInt("difficulty"));
+            // set the date
+            Date taskDate = (Date) getIntent().getExtras().get("dueDate");
+            if (taskDate != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(taskDate);
+                date.setText(cal.get(Calendar.MONTH) + 1 + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
+            }
+        }
+
         //Done!
         Done = (Button)findViewById(R.id.bDone);
         Done.setOnClickListener(new View.OnClickListener() {
@@ -124,14 +137,10 @@ public class NewTask extends FragmentActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(NewTask.this, TaskScreen.class);
 
-
                 //Extracting the user input values
                 String taskTitle = enterTaskName.getText().toString();
 
-                Log.d("Grind", "Test: " + importanceBar.getProgress());
-                Log.d("Grind", "Test: " + difficultyBar.getProgress());
-
-
+                //save the information to SQL
                 saveData(taskTitle, dateString, "", importanceBar.getProgress(), difficultyBar.getProgress(), 0);
 
                 startActivity(intent);
@@ -185,6 +194,7 @@ public class NewTask extends FragmentActivity {
 
         if(isUpdate)
         {
+            Log.w("Grind", id + "");
             //update database with new data
             database.update(TaskDatabaseHelper.TABLE_TASK, values, TaskDatabaseHelper.KEY_ID + "=" + id, null);
         }
