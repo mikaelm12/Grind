@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,8 +25,8 @@ public class TaskScreen extends ActionBarActivity {
 
     private TaskDatabaseHelper dbHelper;
     private SQLiteDatabase database;
-    private ArrayList<String> taskID = new ArrayList<String>();
-    private ArrayList<String> taskTitle = new ArrayList<String>();
+
+    private ArrayList<Task> tasks = new ArrayList<Task>();
 
     public enum Order { none, title, difficulty, importance, date};
 
@@ -54,8 +55,11 @@ public class TaskScreen extends ActionBarActivity {
         dbHelper = new TaskDatabaseHelper(this);
         displayData();
 
+        ArrayAdapter<Task> adapter  = new ArrayAdapter<Task>(this,android.R.layout.simple_list_item_1,tasks);
+        taskList.setAdapter(adapter);
+
         //initialize Parse
-        //probably not going to use Parse at allf
+        //for analytics if we need it
 //        Parse.initialize(this, "unglciIFqSiLlkBuzEpkOlE4eQhoq7FWqGDFLmaA", "Tx1sNxriLDdElnXgTKZrLZ9hN8zlOkAUBiUu3PnC");
     }
 
@@ -68,6 +72,13 @@ public class TaskScreen extends ActionBarActivity {
 
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            Task task = new Task(cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_ID)),
+                    cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)),
+                    cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_IMPORTANCE)),
+                    cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)));
+
+            tasks.add(task);
+
             Log.w("Grind", cursor.getString(cursor.getColumnIndex(dbHelper.KEY_ID)) + " , " +
                     cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)) + " , " +
                     cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)) + " , " +
