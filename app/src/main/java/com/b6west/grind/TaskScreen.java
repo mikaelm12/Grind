@@ -17,8 +17,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.b6west.grind.database.TaskDatabaseHelper;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TaskScreen extends ActionBarActivity {
     ListView taskList;
@@ -28,6 +35,7 @@ public class TaskScreen extends ActionBarActivity {
     private TaskDatabaseHelper dbHelper;
     private SQLiteDatabase database;
 
+    //list view list from SQL
     private ArrayList<Task> tasks = new ArrayList<Task>();
 
     public enum Order { none, title, difficulty, importance, date};
@@ -60,7 +68,8 @@ public class TaskScreen extends ActionBarActivity {
 
         //initialize Parse
         //for analytics if we need it
-//        Parse.initialize(this, "unglciIFqSiLlkBuzEpkOlE4eQhoq7FWqGDFLmaA", "Tx1sNxriLDdElnXgTKZrLZ9hN8zlOkAUBiUu3PnC");
+        Parse.initialize(this, "unglciIFqSiLlkBuzEpkOlE4eQhoq7FWqGDFLmaA", "Tx1sNxriLDdElnXgTKZrLZ9hN8zlOkAUBiUu3PnC");
+        ParseAnalytics.trackAppOpened(getIntent());
     }
 
     /**
@@ -70,19 +79,33 @@ public class TaskScreen extends ActionBarActivity {
         database = dbHelper.getWritableDatabase();
         Cursor cursor = database.rawQuery("SELECT * FROM " + dbHelper.TABLE_TASK, null);
 
-
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            Task task = new Task(cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_ID)),
-                    cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)),
-                    cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_IMPORTANCE)),
-                    cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)));
+            //get dateString from SQL
+            String dateString = cursor.getString(cursor.getColumnIndex(dbHelper.KEY_DATE));
 
-            tasks.add(task);
+            if (dateString == null) {
+                //add from SQL to the task list
+                Task task = new Task(cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_ID)),
+                        cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)),
+                        cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_IMPORTANCE)),
+                        cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)));
 
-            Log.w("Grind", cursor.getString(cursor.getColumnIndex(dbHelper.KEY_ID)) + " , " +
-                    cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)) + " , " +
-                    cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)) + " , " +
-                    cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_IMPORTANCE)) + " , ");
+                tasks.add(task);
+            } else {
+                try {
+                    //convert SQL date string to Date object
+                    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+                    //make new task and add it to task list
+                    Task task = new Task(cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_ID)),
+                            cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)),
+                            date,
+                            cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_IMPORTANCE)),
+                            cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)));
+                    tasks.add(task);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         cursor.close();

@@ -44,6 +44,8 @@ public class NewTask extends FragmentActivity {
 
     Button Done;
 
+    String dateString; //yyyy-MM-dd
+
     private TaskDatabaseHelper dbHelper;
     private SQLiteDatabase database;
     private String id,title;
@@ -137,7 +139,7 @@ public class NewTask extends FragmentActivity {
                 // public Task(String title, Date date, int importance, int difficulty){
 //                Task task = new Task(taskTitle, dueDate, importance, difficulty);
 
-                saveData(taskTitle, "yyyy-MM-dd", "", importance, difficulty, 0);
+                saveData(taskTitle, dateString, "", importance, difficulty, 0);
 
                 startActivity(intent);
             }
@@ -151,8 +153,17 @@ public class NewTask extends FragmentActivity {
         newFragment.show(getFragmentManager(), "DatePicker");
     }
     public void populateSetDate(int year, int month, int day) {
-
         date.setText(month + "/" + day + "/" + year);
+
+        if (month < 10 && day < 10) {
+            dateString = year + "-" + "0" + month + "-" + "0" + day;
+        } else if (month < 10) {
+            dateString = year + "-" + "0" + month + "-" + day;
+        } else if (day < 10) {
+            dateString = year + "-" + month + "-" + "0" + day;
+        } else {
+            dateString = year + "-" + month + "-" + day;
+        }
     }
 
 
