@@ -29,6 +29,7 @@ import com.b6west.grind.database.TaskDatabaseHelper;
 //import com.parse.Parse;
 //import com.parse.ParseAnalytics;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,8 +47,6 @@ public class TaskScreen extends ActionBarActivity {
 
     //list view list from SQL
     private ArrayList<Task> tasks = new ArrayList<Task>();
-
-    public enum Order { none, title, difficulty, importance, date};
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -114,9 +113,9 @@ public class TaskScreen extends ActionBarActivity {
             addTaskPrompt.setWidth(0);
         }
 
-
-
+        //Click to update data
         taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(TaskScreen.this, NewTask.class);
@@ -202,15 +201,20 @@ public class TaskScreen extends ActionBarActivity {
 
             //Setting task date
 
-           date = (TextView)convertView.findViewById(R.id.tvTaskDate);
-           date.setText(task.getDueDate().toString());
+            date = (TextView)convertView.findViewById(R.id.tvTaskDate);
+            if (task.getDueDate() == null) {
+                date.setText("");
+            } else {
+                DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.FULL);
+                date.setText(dateFormatter.format(task.getDueDate()));
+            }
 
             return convertView;
 
-
-
         }
     }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
