@@ -13,7 +13,8 @@ public class Task {
     public int importance = 0;
     public String category;
     public Date dueDate;
-    public int Score;
+    public int score;
+    public boolean completed = false;
 
 
     public Task(int id, String title, Date date, int importance, int difficulty){
@@ -22,6 +23,7 @@ public class Task {
         this.difficulty = difficulty;
         this.importance = importance;
         this.dueDate = date;
+        calculateScore(); //completed is false for all new entries
     }
 
     public Task(int id, String title, int importance, int difficulty){
@@ -29,6 +31,7 @@ public class Task {
         this.title = title;
         this.importance = importance;
         this.difficulty = difficulty;
+        calculateScore(); //completed is false for all new entries
     }
 
     public int getId() { return id; }
@@ -73,9 +76,21 @@ public class Task {
         this.title = title;
     }
 
-    public void calculateScore(){
 
+    public int getScore() { return score; }
+
+    public boolean getCompleted() { return false; }
+
+    public void setCompleted(boolean completed) { this.completed = completed; }
+
+    public void calculateScore(){
+        if (completed) {
+            score = -1;
+        } else {
+            score = difficulty/2;
+        }
     }
+
 
     public String toString() {
         return "Title: " + title + " duedate: " + dueDate + " difficulty: " + difficulty + " importance: " + importance;

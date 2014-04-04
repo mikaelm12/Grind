@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -118,15 +120,17 @@ public class TaskScreen extends ActionBarActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(TaskScreen.this, NewTask.class);
                 Task selectedTask = (Task) parent.getItemAtPosition(position);
-                intent.putExtra("update", true);
-                intent.putExtra("id", selectedTask.getId());
-                intent.putExtra("title", selectedTask.getTitle());
-                if (selectedTask.getDueDate() != null) { intent.putExtra("dueDate", selectedTask.getDueDate()); }
-                intent.putExtra("importance", selectedTask.getImportance());
-                intent.putExtra("difficulty", selectedTask.getDifficulty());
-                startActivity(intent);
+                if (!selectedTask.completed) {
+                    Intent intent = new Intent(TaskScreen.this, NewTask.class);
+                    intent.putExtra("update", true);
+                    intent.putExtra("id", selectedTask.getId());
+                    intent.putExtra("title", selectedTask.getTitle());
+                    if (selectedTask.getDueDate() != null) { intent.putExtra("dueDate", selectedTask.getDueDate()); }
+                    intent.putExtra("importance", selectedTask.getImportance());
+                    intent.putExtra("difficulty", selectedTask.getDifficulty());
+                    startActivity(intent);
+                }
             }
         });
 
@@ -181,7 +185,7 @@ public class TaskScreen extends ActionBarActivity {
         TextView taskTitle;
         CheckBox completed;
         TextView date;
-
+        Task task;
 
         public TaskAdapter(ArrayList<Task> taskArrayList){
             super(TaskScreen.this, 0 ,taskArrayList );
@@ -193,14 +197,39 @@ public class TaskScreen extends ActionBarActivity {
                 convertView = TaskScreen.this.getLayoutInflater().inflate(R.layout.task_row,null);
             }
 
-            Task task = getItem(position);
+            task = getItem(position);
+
+            if (convertView != null) {
+                switch (task.getScore()) {
+                    case 5:
+                        convertView.setBackgroundColor(Color.parseColor("#c0392b")); //dark red
+                        break;
+                    case 4:
+                        convertView.setBackgroundColor(Color.parseColor("#d35400")); //orange red
+                        break;
+                    case 3:
+                        convertView.setBackgroundColor(Color.parseColor("#e67e22"));
+                        break;
+                    case 2:
+                        convertView.setBackgroundColor(Color.parseColor("#f39c12"));
+                        break;
+                    case 1:
+                        convertView.setBackgroundColor(Color.parseColor("#f1c40f"));
+                        break;
+                    case 0:
+                        convertView.setBackgroundColor(Color.TRANSPARENT);
+                        break;
+                    default:
+                        convertView.setBackgroundColor(Color.GRAY);
+                        break;
+                }
+            }
 
             //Setting task title
             taskTitle = (TextView)convertView.findViewById(R.id.tvTaskTitle);
             taskTitle.setText(task.getTitle());
 
             //Setting task date
-
             date = (TextView)convertView.findViewById(R.id.tvTaskDate);
             if (task.getDueDate() == null) {
                 date.setText("");
@@ -209,8 +238,54 @@ public class TaskScreen extends ActionBarActivity {
                 date.setText(dateFormatter.format(task.getDueDate()));
             }
 
-            return convertView;
+            //action on checkbox click
+            completed = (CheckBox) convertView.findViewById(R.id.cbCompleted);
+            completed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+            {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+                {
+                    if (isChecked) {
+                        task.setCompleted(true);
+                        //change in database and update score
+                        task.calculateScore();
+                        //update color
+                    } else {
+                        task.setCompleted(false);
+                        //change in database and update score
+                        task.calculateScore();
+                        //update color
+                    }
 
+                }
+            });
+
+            return convertView;
+        }
+
+        private void setBGColor(View convertView){
+            switch (task.getScore()) {
+                case 5:
+                    convertView.setBackgroundColor(Color.parseColor("#c0392b")); //dark red
+                    break;
+                case 4:
+                    convertView.setBackgroundColor(Color.parseColor("#d35400")); //orange red
+                    break;
+                case 3:
+                    convertView.setBackgroundColor(Color.parseColor("#e67e22"));
+                    break;
+                case 2:
+                    convertView.setBackgroundColor(Color.parseColor("#f39c12"));
+                    break;
+                case 1:
+                    convertView.setBackgroundColor(Color.parseColor("#f1c40f"));
+                    break;
+                case 0:
+                    convertView.setBackgroundColor(Color.TRANSPARENT);
+                    break;
+                default:
+                    convertView.setBackgroundColor(Color.GRAY);
+                    break;
+            }
         }
     }
 
