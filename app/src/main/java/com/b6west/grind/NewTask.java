@@ -127,6 +127,7 @@ public class NewTask extends FragmentActivity {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(taskDate);
                 date.setText(cal.get(Calendar.MONTH) + 1 + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
+                dateString = getDateString(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH));
             }
         }
 
@@ -140,6 +141,7 @@ public class NewTask extends FragmentActivity {
                 //Extracting the user input values
                 String taskTitle = enterTaskName.getText().toString();
 
+                Log.w("Grind", "importance: " + importanceBar.getProgress());
                 //save the information to SQL
                 saveData(taskTitle, dateString, "", importanceBar.getProgress(), difficultyBar.getProgress(), 0);
 
@@ -156,19 +158,23 @@ public class NewTask extends FragmentActivity {
     }
     public void populateSetDate(int year, int month, int day) {
         date.setText(month + "/" + day + "/" + year);
-
-        //update the date string, must format yyyy-MM-dd
-        if (month < 10 && day < 10) {
-            dateString = year + "-" + "0" + month + "-" + "0" + day;
-        } else if (month < 10) {
-            dateString = year + "-" + "0" + month + "-" + day;
-        } else if (day < 10) {
-            dateString = year + "-" + month + "-" + "0" + day;
-        } else {
-            dateString = year + "-" + month + "-" + day;
-        }
+        dateString = getDateString(year, month, day);
     }
 
+    private String getDateString(int year, int month, int day) {
+        String dateAsString = new String();
+        //update the date string, must format yyyy-MM-dd
+        if (month < 10 && day < 10) {
+            dateAsString = year + "-" + "0" + month + "-" + "0" + day;
+        } else if (month < 10) {
+            dateAsString = year + "-" + "0" + month + "-" + day;
+        } else if (day < 10) {
+            dateAsString = year + "-" + month + "-" + "0" + day;
+        } else {
+            dateAsString = year + "-" + month + "-" + day;
+        }
+        return dateAsString;
+    }
 
     /**
      * Save new task to SQLite

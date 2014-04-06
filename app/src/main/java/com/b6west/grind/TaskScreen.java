@@ -202,25 +202,25 @@ public class TaskScreen extends ActionBarActivity {
             if (convertView != null) {
                 switch (task.getScore()) {
                     case 5:
-                        convertView.setBackgroundColor(Color.parseColor("#c0392b")); //dark red
+                        convertView.setBackgroundColor(Color.parseColor("#ff5f4a")); //dark red
                         break;
                     case 4:
-                        convertView.setBackgroundColor(Color.parseColor("#d35400")); //orange red
+                        convertView.setBackgroundColor(Color.parseColor("#fd8a67")); //orange red
                         break;
                     case 3:
-                        convertView.setBackgroundColor(Color.parseColor("#e67e22"));
+                        convertView.setBackgroundColor(Color.parseColor("#FFB384"));
                         break;
                     case 2:
-                        convertView.setBackgroundColor(Color.parseColor("#f39c12"));
+                        convertView.setBackgroundColor(Color.parseColor("#FFD3AD"));
                         break;
                     case 1:
-                        convertView.setBackgroundColor(Color.parseColor("#f1c40f"));
+                        convertView.setBackgroundColor(Color.parseColor("#FFEAC7"));
                         break;
                     case 0:
                         convertView.setBackgroundColor(Color.TRANSPARENT);
                         break;
                     default:
-                        convertView.setBackgroundColor(Color.GRAY);
+                        convertView.setBackgroundColor(Color.parseColor("#66cc66"));
                         break;
                 }
             }
@@ -260,32 +260,6 @@ public class TaskScreen extends ActionBarActivity {
             });
 
             return convertView;
-        }
-
-        private void setBGColor(View convertView){
-            switch (task.getScore()) {
-                case 5:
-                    convertView.setBackgroundColor(Color.parseColor("#c0392b")); //dark red
-                    break;
-                case 4:
-                    convertView.setBackgroundColor(Color.parseColor("#d35400")); //orange red
-                    break;
-                case 3:
-                    convertView.setBackgroundColor(Color.parseColor("#e67e22"));
-                    break;
-                case 2:
-                    convertView.setBackgroundColor(Color.parseColor("#f39c12"));
-                    break;
-                case 1:
-                    convertView.setBackgroundColor(Color.parseColor("#f1c40f"));
-                    break;
-                case 0:
-                    convertView.setBackgroundColor(Color.TRANSPARENT);
-                    break;
-                default:
-                    convertView.setBackgroundColor(Color.GRAY);
-                    break;
-            }
         }
     }
 

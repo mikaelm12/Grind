@@ -1,5 +1,7 @@
 package com.b6west.grind;
 
+import android.util.Log;
+
 import java.util.Date;
 
 /**
@@ -87,8 +89,18 @@ public class Task {
         if (completed) {
             score = -1;
         } else {
-            score = difficulty/2;
+            Log.w("Grind", "task date: " + this.getDueDate());
+
+            if (this.getDueDate() == null ) {
+                score = 0;
+            } else {
+                Log.w("Grind", "task imp: " + importance);
+                long diffInMillisec = (new Date()).getTime() - this.getDueDate().getTime();
+                long diffInDays = (diffInMillisec / (24 * 60 * 60 * 1000));
+                score = importance;
+            }
         }
+        Log.w("Grind", score + " : score");
     }
 
 
