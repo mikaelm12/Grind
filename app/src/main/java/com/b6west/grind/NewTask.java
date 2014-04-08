@@ -116,7 +116,6 @@ public class NewTask extends FragmentActivity {
         if (isUpdate) {
             //get selected task ID
             id = getIntent().getExtras().getInt("id");
-            Log.w("Grind", "selected id: " + id);
             //update the newTask to display the values of the selected task from main list view
             enterTaskName.setText(getIntent().getExtras().getString("title"));
             importanceBar.setProgress(getIntent().getExtras().getInt("importance"));
@@ -141,7 +140,6 @@ public class NewTask extends FragmentActivity {
                 //Extracting the user input values
                 String taskTitle = enterTaskName.getText().toString();
 
-                Log.w("Grind", "importance: " + importanceBar.getProgress());
                 //save the information to SQL
                 saveData(taskTitle, dateString, "", importanceBar.getProgress(), difficultyBar.getProgress(), 0);
 
@@ -200,7 +198,6 @@ public class NewTask extends FragmentActivity {
 
         if(isUpdate)
         {
-            Log.w("Grind", id + "");
             //update database with new data
             database.update(TaskDatabaseHelper.TABLE_TASK, values, TaskDatabaseHelper.KEY_ID + "=" + id, null);
         }

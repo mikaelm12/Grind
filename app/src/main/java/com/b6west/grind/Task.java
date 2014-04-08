@@ -2,6 +2,7 @@ package com.b6west.grind;
 
 import android.util.Log;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -14,25 +15,37 @@ public class Task {
     public int difficulty = 0;
     public int importance = 0;
     public String category;
-    public Date dueDate;
+    public Date dueDate = null;
     public int score;
     public boolean completed = false;
 
 
-    public Task(int id, String title, Date date, int importance, int difficulty){
+    public Task(int id, String title, Date date, int importance, int difficulty, int completed){
         this.id = id;
         this.title = title;
         this.difficulty = difficulty;
         this.importance = importance;
         this.dueDate = date;
+        if (completed == 1) {
+            this.completed = true;
+        } else {
+            this.completed = false;
+        }
+
         calculateScore(); //completed is false for all new entries
     }
 
-    public Task(int id, String title, int importance, int difficulty){
+    public Task(int id, String title, int importance, int difficulty, int completed){
         this.id = id;
         this.title = title;
         this.importance = importance;
         this.difficulty = difficulty;
+        if (completed == 1) {
+            this.completed = true;
+        } else {
+            this.completed = false;
+        }
+
         calculateScore(); //completed is false for all new entries
     }
 
@@ -81,7 +94,7 @@ public class Task {
 
     public int getScore() { return score; }
 
-    public boolean getCompleted() { return false; }
+    public boolean getCompleted() { return completed; }
 
     public void setCompleted(boolean completed) { this.completed = completed; }
 
@@ -124,13 +137,36 @@ public class Task {
                 score = importance + difficulty + dueDateScore;
             }
         }
-        Log.w("Grind", score + " : score");
     }
 
+    public String getDateString() {
+        String dateAsString = new String();
+        //update the date string, must format yyyy-MM-dd
+        if (this.dueDate != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(this.dueDate);
+            int month = cal.get(Calendar.MONTH) + 1;
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            int year = cal.get(Calendar.YEAR);
+
+            if (month < 10 && day < 10) {
+                dateAsString = year + "-" + "0" + month + "-" + "0" + day;
+            } else if (month < 10) {
+                dateAsString = year + "-" + "0" + month + "-" + day;
+            } else if (day < 10) {
+                dateAsString = year + "-" + month + "-" + "0" + day;
+            } else {
+                dateAsString = year + "-" + month + "-" + day;
+            }
+        }
+        return dateAsString;
+    }
 
     public String toString() {
         return "Title: " + title + " duedate: " + dueDate + " difficulty: " + difficulty + " importance: " + importance;
     }
+
+
 
 
 }

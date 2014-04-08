@@ -20,11 +20,11 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
     public static final String KEY_COMPLETED = "completed";
 
     private static final String DATABASE_NAME = "tasktable.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String DATABASE_CREATE = "CREATE TABLE " + TABLE_TASK + " (" +
             KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            KEY_TITLE + " TEXT NOT NULL, " +
+            KEY_TITLE + " TEXT, " +
             KEY_DATE + " TEXT, " +
             KEY_CATEGORY + " TEXT, " +
             KEY_IMPORTANCE + " INTEGER, " +
@@ -45,9 +45,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w("Grind", "onupgrade");
 
-        if (oldVersion == 1) {
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASK);
-            onCreate(db);
-        }
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASK);
+        onCreate(db);
     }
 }
