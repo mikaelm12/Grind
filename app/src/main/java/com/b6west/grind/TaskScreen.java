@@ -213,13 +213,18 @@ public class TaskScreen extends ActionBarActivity {
                 holder.taskCB = (CheckBox) convertView.findViewById(R.id.cbCompleted);
                 convertView.setTag(holder);
 
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            if (holder != null) {
                 final int pos = position;
                 holder.taskTitle.setText(tasks.get(position).getTitle());
                 holder.taskCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         Task selectedTask = tasks.get(pos);
-                        tasks.get(pos).setCompleted(isChecked);
-                        tasks.get(pos).calculateScore();
+                        selectedTask.setCompleted(isChecked);
+                        selectedTask.calculateScore();
 
                         int completed = isChecked? 1 : 0;
                         //update database
@@ -229,7 +234,6 @@ public class TaskScreen extends ActionBarActivity {
                                 "UPDATE " + TaskDatabaseHelper.TABLE_TASK
                                         + " SET "   + TaskDatabaseHelper.KEY_COMPLETED+ "=" + completed
                                         + " WHERE " + TaskDatabaseHelper.KEY_ID +"=?";
-                        Log.w("Grind", query);
                         Cursor cu = database.rawQuery(query, args);
                         cu.moveToFirst();
                         cu.close();
@@ -237,7 +241,6 @@ public class TaskScreen extends ActionBarActivity {
                         notifyDataSetChanged();
                     }
                 });
-
             }
 
             task = getItem(position);

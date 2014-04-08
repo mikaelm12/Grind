@@ -26,7 +26,12 @@ public class Task {
         this.difficulty = difficulty;
         this.importance = importance;
         this.dueDate = date;
-        if (completed == 1) { this.completed = true; }
+        if (completed == 1) {
+            this.completed = true;
+        } else {
+            this.completed = false;
+        }
+
         calculateScore(); //completed is false for all new entries
     }
 
@@ -35,7 +40,12 @@ public class Task {
         this.title = title;
         this.importance = importance;
         this.difficulty = difficulty;
-        if (completed == 1) { this.completed = true; }
+        if (completed == 1) {
+            this.completed = true;
+        } else {
+            this.completed = false;
+        }
+
         calculateScore(); //completed is false for all new entries
     }
 
