@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_below="@id/tvImportance"
-        android:max="5"
+        android:max="10"
         android:id="@+id/sbImportance"/>
     <TextView
         android:layout_width="match_parent"
@@ -63,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/sbDifficulty"
-        android:max="5"
+        android:max="10"
         android:layout_below="@+id/tvDifficulty"/>
    <Button
        android:layout_width="match_parent"

@@ -86,6 +86,7 @@ public class Task {
     public void setCompleted(boolean completed) { this.completed = completed; }
 
     public void calculateScore(){
+        int dueDateScore = 0;
         if (completed) {
             score = -1;
         } else {
@@ -96,8 +97,31 @@ public class Task {
             } else {
                 Log.w("Grind", "task imp: " + importance);
                 long diffInMillisec = (new Date()).getTime() - this.getDueDate().getTime();
+
                 long diffInDays = (diffInMillisec / (24 * 60 * 60 * 1000));
-                score = importance;
+
+               //Creating different cases , < 1 day away < 3 days away < 7 days < 15days < 30days
+                if (diffInDays < 1){
+                    dueDateScore = 10;
+                }
+                else if(diffInDays < 3){
+                    dueDateScore = 8;
+                }
+
+                else if(diffInDays < 7){
+                    dueDateScore = 5;
+                }
+                else if(dueDateScore < 30){
+                    dueDateScore = 3;
+
+                }
+
+                else{
+                    dueDateScore = 1;
+                }
+
+
+                score = importance + difficulty + dueDateScore;
             }
         }
         Log.w("Grind", score + " : score");

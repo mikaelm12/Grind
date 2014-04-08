@@ -83,6 +83,8 @@ public class TaskScreen extends ActionBarActivity {
                 switch (item.getItemId()){
                     case R.id.menu_delete_task:
 
+
+
                         //Delete from data base and notify adapter of change
                 }
                 return true;
@@ -108,7 +110,7 @@ public class TaskScreen extends ActionBarActivity {
        // ArrayAdapter<Task> adapter  = new ArrayAdapter<Task>(this,android.R.layout.simple_list_item_1,tasks);
         //taskList.setAdapter(adapter);
         if(taskList.getCount()== 0){
-            addTaskPrompt.setText("Add a task!");
+            addTaskPrompt.setText("    Add a task!");
         }
         else{
             addTaskPrompt.setHeight(0);
@@ -200,29 +202,29 @@ public class TaskScreen extends ActionBarActivity {
             task = getItem(position);
 
             if (convertView != null) {
-                switch (task.getScore()) {
-                    case 5:
+                int score = task.getScore();
+                if (score > 27){
                         convertView.setBackgroundColor(Color.parseColor("#ff5f4a")); //dark red
-                        break;
-                    case 4:
-                        convertView.setBackgroundColor(Color.parseColor("#fd8a67")); //orange red
-                        break;
-                    case 3:
-                        convertView.setBackgroundColor(Color.parseColor("#FFB384"));
-                        break;
-                    case 2:
-                        convertView.setBackgroundColor(Color.parseColor("#FFD3AD"));
-                        break;
-                    case 1:
-                        convertView.setBackgroundColor(Color.parseColor("#FFEAC7"));
-                        break;
-                    case 0:
-                        convertView.setBackgroundColor(Color.TRANSPARENT);
-                        break;
-                    default:
-                        convertView.setBackgroundColor(Color.parseColor("#66cc66"));
-                        break;
                 }
+                else if(score > 25){
+                        convertView.setBackgroundColor(Color.parseColor("#fd8a67")); //orange red
+                }
+                 else if(score > 20 ){
+                        convertView.setBackgroundColor(Color.parseColor("#FFB384"));
+                }
+                 else if (score > 15) {
+                        convertView.setBackgroundColor(Color.parseColor("#FFD3AD"));
+                }
+                  else if (score > 10){
+                        convertView.setBackgroundColor(Color.parseColor("#FFEAC7"));
+                }
+                 else if (score > 5){
+                        convertView.setBackgroundColor(Color.TRANSPARENT);
+                }
+                  else{
+                        convertView.setBackgroundColor(Color.parseColor("#66cc66"));
+                }
+
             }
 
             //Setting task title
@@ -248,13 +250,17 @@ public class TaskScreen extends ActionBarActivity {
                         task.setCompleted(true);
                         //change in database and update score
                         task.calculateScore();
+                        
+
                         //update color
                     } else {
                         task.setCompleted(false);
                         //change in database and update score
                         task.calculateScore();
+
                         //update color
                     }
+
 
                 }
             });
