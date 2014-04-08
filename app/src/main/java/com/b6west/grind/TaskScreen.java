@@ -1,6 +1,7 @@
 package com.b6west.grind;
 
 import android.annotation.TargetApi;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -157,7 +158,8 @@ public class TaskScreen extends ActionBarActivity {
                 Task task = new Task(cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_ID)),
                         cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)),
                         cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_IMPORTANCE)),
-                        cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)));
+                        cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)),
+                        cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_COMPLETED)));
                 tasks.add(task);
             } else {
                 try {
@@ -168,7 +170,8 @@ public class TaskScreen extends ActionBarActivity {
                             cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)),
                             date,
                             cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_IMPORTANCE)),
-                            cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)));
+                            cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)),
+                            cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_COMPLETED)));
                     tasks.add(task);
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -183,7 +186,7 @@ public class TaskScreen extends ActionBarActivity {
     private class TaskAdapter extends ArrayAdapter<Task>{
 
         TextView taskTitle;
-        CheckBox completed;
+        CheckBox checkBox;
         TextView date;
         Task task;
 
@@ -191,10 +194,50 @@ public class TaskScreen extends ActionBarActivity {
             super(TaskScreen.this, 0 ,taskArrayList );
         }
 
+        private class ViewHolder {
+            TextView taskTitle;
+            CheckBox taskCB;
+        }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView== null){
-                convertView = TaskScreen.this.getLayoutInflater().inflate(R.layout.task_row,null);
+            ViewHolder holder = null;
+
+            if (convertView == null) {
+                holder = new ViewHolder();
+
+                convertView = TaskScreen.this.getLayoutInflater().inflate(R.layout.task_row, null);
+
+                //working with the checkbox
+                holder.taskTitle = (TextView) convertView.findViewById(R.id.tvTaskTitle);
+                holder.taskCB = (CheckBox) convertView.findViewById(R.id.cbCompleted);
+                convertView.setTag(holder);
+
+                final int pos = position;
+                holder.taskTitle.setText(tasks.get(position).getTitle());
+                holder.taskCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        Task selectedTask = tasks.get(pos);
+                        tasks.get(pos).setCompleted(isChecked);
+                        tasks.get(pos).calculateScore();
+
+                        int completed = isChecked? 1 : 0;
+                        //update database
+                        database = dbHelper.getWritableDatabase();
+                        String[] args = { new Integer(selectedTask.getId()).toString() };
+                        String query =
+                                "UPDATE " + TaskDatabaseHelper.TABLE_TASK
+                                        + " SET "   + TaskDatabaseHelper.KEY_COMPLETED+ "=" + completed
+                                        + " WHERE " + TaskDatabaseHelper.KEY_ID +"=?";
+                        Log.w("Grind", query);
+                        Cursor cu = database.rawQuery(query, args);
+                        cu.moveToFirst();
+                        cu.close();
+
+                        notifyDataSetChanged();
+                    }
+                });
+
             }
 
             task = getItem(position);
@@ -238,26 +281,12 @@ public class TaskScreen extends ActionBarActivity {
                 date.setText(dateFormatter.format(task.getDueDate()));
             }
 
-            //action on checkbox click
-            completed = (CheckBox) convertView.findViewById(R.id.cbCompleted);
-            completed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-            {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-                {
-                    if (isChecked) {
-                        task.setCompleted(true);
-                        //change in database and update score
-                        task.calculateScore();
-                        //update color
-                    } else {
-                        task.setCompleted(false);
-                        //change in database and update score
-                        task.calculateScore();
-                        //update color
-                    }
+            //set checkbox as checked
+            checkBox = (CheckBox) convertView.findViewById(R.id.cbCompleted);
+            if (task.getCompleted()) {
+                checkBox.setChecked(true);
+            }
 
-                }
-            });
 
             return convertView;
         }
@@ -286,6 +315,7 @@ public class TaskScreen extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }
 
