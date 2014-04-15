@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
@@ -19,12 +20,31 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.sql.SQLInput.*;
 
 import com.b6west.grind.database.TaskDatabaseHelper;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
 
 
 /**
@@ -142,6 +162,43 @@ public class NewTask extends FragmentActivity {
 
                 //save the information to SQL
                 saveData(taskTitle, dateString, "", importanceBar.getProgress(), difficultyBar.getProgress(), 0);
+
+                /////// log to the CSV file ///////////////////
+                String FILENAME = "grind_tasks.csv";
+
+                //get today's date
+                Date date = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                //today's date, task title, due date, importance, difficulty, isUpdate
+                String entry = sdf.format(date).toString() + "," +
+                                taskTitle + "," +
+                                dateString + "," +
+                                importanceBar.getProgress() + "," +
+                                difficultyBar.getProgress() + "," +
+                                isUpdate + "\n";
+
+
+                File externalDir = getExternalFilesDir(null);
+                String filePath = externalDir + "/" + FILENAME;
+                File file = new File(externalDir, FILENAME);
+
+                Log.w("Grind", "external dir :" + externalDir.getAbsolutePath());
+
+                try {
+                    FileWriter fileWriter = new FileWriter(file,true);
+
+                    //Use BufferedWriter instead of FileWriter for better performance
+                    BufferedWriter bufferFileWriter  = new BufferedWriter(fileWriter);
+                    fileWriter.append(entry);
+
+                    //Don't forget to close Streams or Reader to free FileDescriptor associated with it
+                    bufferFileWriter.close();
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //////////////////////////////////////////////
 
                 startActivity(intent);
             }

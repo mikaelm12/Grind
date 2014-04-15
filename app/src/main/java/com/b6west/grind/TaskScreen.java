@@ -29,13 +29,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.b6west.grind.database.TaskDatabaseHelper;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
 //import com.parse.Parse;
 //import com.parse.ParseAnalytics;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +62,31 @@ public class TaskScreen extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_screen);
+
+        /////// log to the CSV file ///////////////////
+        String FILENAME = "grindOpens.csv";
+
+        //get today's date
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        //today's date, task title, due date, importance, difficulty, isUpdate
+        String entry = dateFormat.format(cal.getTime()) + "\n";
+
+        File externalDir = getExternalFilesDir(null);
+        String filePath = externalDir + "/" + FILENAME;
+        File file = new File(externalDir, FILENAME);
+
+        try {
+            FileWriter fileWriter = new FileWriter(file,true);
+            //Use BufferedWriter instead of FileWriter for better performance
+            BufferedWriter bufferFileWriter  = new BufferedWriter(fileWriter);
+            fileWriter.append(entry);
+            //Don't forget to close Streams or Reader to free FileDescriptor associated with it
+            bufferFileWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //////////////////////////////////////////////
 
         taskList = (ListView)findViewById(R.id.lvTaskList);
 
@@ -140,8 +171,8 @@ public class TaskScreen extends ActionBarActivity {
 
         //initialize Parse
         //for analytics if we need it
-       // Parse.initialize(this, "unglciIFqSiLlkBuzEpkOlE4eQhoq7FWqGDFLmaA", "Tx1sNxriLDdElnXgTKZrLZ9hN8zlOkAUBiUu3PnC");
-       // ParseAnalytics.trackAppOpened(getIntent());
+//        Parse.initialize(this, "unglciIFqSiLlkBuzEpkOlE4eQhoq7FWqGDFLmaA", "Tx1sNxriLDdElnXgTKZrLZ9hN8zlOkAUBiUu3PnC");
+//        ParseAnalytics.trackAppOpened(getIntent());
     }
 
     /**
@@ -264,7 +295,7 @@ public class TaskScreen extends ActionBarActivity {
                   else if (score > 10){
                         convertView.setBackgroundColor(Color.parseColor("#FFEAC7"));
                 }
-                 else if (score > 5){
+                 else if (score >= 0){
                         convertView.setBackgroundColor(Color.TRANSPARENT);
                 }
                   else{
@@ -324,5 +355,33 @@ public class TaskScreen extends ActionBarActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        /////// log to the CSV file ///////////////////
+        String FILENAME = "grindOpens.csv";
+
+        //get today's date
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        //today's date, task title, due date, importance, difficulty, isUpdate
+        String entry = dateFormat.format(cal.getTime()) + "\n";
+
+        File externalDir = getExternalFilesDir(null);
+        String filePath = externalDir + "/" + FILENAME;
+        File file = new File(externalDir, FILENAME);
+
+        try {
+            FileWriter fileWriter = new FileWriter(file,true);
+            //Use BufferedWriter instead of FileWriter for better performance
+            BufferedWriter bufferFileWriter  = new BufferedWriter(fileWriter);
+            fileWriter.append(entry);
+            //Don't forget to close Streams or Reader to free FileDescriptor associated with it
+            bufferFileWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //////////////////////////////////////////////
+    }
 }
 
