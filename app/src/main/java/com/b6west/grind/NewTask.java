@@ -123,7 +123,6 @@ public class NewTask extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 selectDate(view);
-
             }
         });
 
@@ -165,7 +164,6 @@ public class NewTask extends FragmentActivity {
 
                 /////// log to the CSV file ///////////////////
                 String FILENAME = "grind_tasks.csv";
-
                 //get today's date
                 Date date = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -176,25 +174,16 @@ public class NewTask extends FragmentActivity {
                                 importanceBar.getProgress() + "," +
                                 difficultyBar.getProgress() + "," +
                                 isUpdate + "\n";
-
-
                 File externalDir = getExternalFilesDir(null);
                 String filePath = externalDir + "/" + FILENAME;
                 File file = new File(externalDir, FILENAME);
-
-                Log.w("Grind", "external dir :" + externalDir.getAbsolutePath());
-
                 try {
                     FileWriter fileWriter = new FileWriter(file,true);
-
                     //Use BufferedWriter instead of FileWriter for better performance
                     BufferedWriter bufferFileWriter  = new BufferedWriter(fileWriter);
                     fileWriter.append(entry);
-
                     //Don't forget to close Streams or Reader to free FileDescriptor associated with it
                     bufferFileWriter.close();
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
