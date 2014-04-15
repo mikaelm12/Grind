@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -140,8 +141,6 @@ public class TaskScreen extends ActionBarActivity {
                 taskAdapter.notifyDataSetChanged();
 
 
-
-
             }
 
             @Override
@@ -159,27 +158,26 @@ public class TaskScreen extends ActionBarActivity {
 
             @Override
             public boolean onActionItemClicked(ActionMode actionMode, MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.menu_delete_task:
 
-                        for (int i = taskAdapter.getCount(); i >=0; i--){
+                        for (int i = taskAdapter.getCount(); i >= 0; i--) {
 
-                            if (taskList.isItemChecked(i)){
+                            if (taskList.isItemChecked(i)) {
                                 tasks.remove(i);
-
+                                Log.w("Gring", "thingy " + tasks.get(i));
+                                Task task = tasks.get(i);
+                                database.delete(dbHelper.TABLE_TASK, dbHelper.KEY_ID + "=" + task.getId(), null);
                             }
                         }
-                            taskAdapter.notifyDataSetChanged();
-                            actionMode.finish();
-
-
+                        taskAdapter.notifyDataSetChanged();
+                        actionMode.finish();
 
 
                         return true;
                     default:
                         return false;     //Delete from data base and notify adapter of change
                 }
-
 
 
             }
@@ -190,11 +188,10 @@ public class TaskScreen extends ActionBarActivity {
 
                 //for (int i = taskAdapter.getCount(); i >=0; i--){
 
-                  // taskAdapter.getItem(i).setSelected(false);
+                // taskAdapter.getItem(i).setSelected(false);
                 //}
                 //taskAdapter.notifyDataSetChanged();
                 //actionMode.finish();
-
 
 
             }
