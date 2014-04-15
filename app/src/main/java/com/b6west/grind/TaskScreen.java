@@ -160,7 +160,7 @@ public class TaskScreen extends ActionBarActivity {
             public boolean onActionItemClicked(ActionMode actionMode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_delete_task:
-
+                        database = dbHelper.getWritableDatabase();
                         for (int i = taskAdapter.getCount(); i >= 0; i--) {
 
                             if (taskList.isItemChecked(i)) {
@@ -291,8 +291,8 @@ public class TaskScreen extends ActionBarActivity {
                     database = dbHelper.getWritableDatabase();
 
                     ContentValues data = new ContentValues();
-                    data.put(TaskDatabaseHelper.KEY_COMPLETED,completed);
-                    database.update(TaskDatabaseHelper.TABLE_TASK, data, "_id=" + selectedTask.getId(), null);
+                    data.put(dbHelper.KEY_COMPLETED,completed);
+                    database.update(dbHelper.TABLE_TASK, data, dbHelper.KEY_ID + "=" + selectedTask.getId(), null);
                     database.close();
 
                     notifyDataSetChanged();
