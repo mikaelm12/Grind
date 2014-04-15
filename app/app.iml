@@ -6,6 +6,7 @@
         <option name="SELECTED_BUILD_VARIANT" value="debug" />
         <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
         <option name="COMPILE_JAVA_TASK_NAME" value="compileDebugJava" />
+        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleDebugTest" />
         <option name="SOURCE_GEN_TASK_NAME" value="generateDebugSources" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
@@ -29,20 +30,32 @@
       <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/source/rs/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/res/rs/debug" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/r/test/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/test/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/test/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/test/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/test/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/aidl" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/rs" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/aidl" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/rs" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/res" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/build/apk" />
       <excludeFolder url="file://$MODULE_DIR$/build/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/bundles" />
@@ -55,67 +68,106 @@
       <excludeFolder url="file://$MODULE_DIR$/build/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android 4.2.2" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 17 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="package-frame" level="project" />
     <orderEntry type="library" exported="" name="ParseObject" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseObject" level="project" />
     <orderEntry type="library" exported="" name="FunctionCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_FunctionCallback" level="project" />
     <orderEntry type="library" exported="" name="ParseGeoPoint" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseGeoPoint" level="project" />
     <orderEntry type="library" exported="" name="overview-tree" level="project" />
     <orderEntry type="library" exported="" name="ParseAnonymousUtils" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseAnonymousUtils" level="project" />
     <orderEntry type="library" exported="" name="PushService" level="project" />
+    <orderEntry type="library" exported="" name="1_PushService" level="project" />
     <orderEntry type="library" exported="" name="ParseRelation" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseRelation" level="project" />
     <orderEntry type="library" exported="" name="allclasses-frame" level="project" />
     <orderEntry type="library" exported="" name="LocationCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_LocationCallback" level="project" />
     <orderEntry type="library" exported="" name="ParseACL" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseACL" level="project" />
     <orderEntry type="library" exported="" name="ParsePush" level="project" />
-    <orderEntry type="library" exported="" name="19.0.1" level="project" />
+    <orderEntry type="library" exported="" name="1_ParsePush" level="project" />
     <orderEntry type="library" exported="" name="help-doc" level="project" />
     <orderEntry type="library" exported="" name="deprecated-list" level="project" />
     <orderEntry type="library" exported="" name="ParseQueryAdapter" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseQueryAdapter" level="project" />
     <orderEntry type="library" exported="" name="index-all" level="project" />
     <orderEntry type="library" exported="" name="index" level="project" />
     <orderEntry type="library" exported="" name="ParseQueryAdapter.QueryFactory" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseQueryAdapter.QueryFactory" level="project" />
     <orderEntry type="library" exported="" name="ParseQueryAdapter.OnQueryLoadListener" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseQueryAdapter.OnQueryLoadListener" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-19.1.0" level="project" />
     <orderEntry type="library" exported="" name="Parse-1.4.2" level="project" />
+    <orderEntry type="library" exported="" name="1_Parse-1.4.2" level="project" />
     <orderEntry type="library" exported="" name="DeleteCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_DeleteCallback" level="project" />
     <orderEntry type="library" exported="" name="SignUpCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_SignUpCallback" level="project" />
     <orderEntry type="library" exported="" name="inherit" level="project" />
     <orderEntry type="library" exported="" name="ParseImageView" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseImageView" level="project" />
     <orderEntry type="library" exported="" name="FindCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_FindCallback" level="project" />
     <orderEntry type="library" exported="" name="package-use" level="project" />
     <orderEntry type="library" exported="" name="ParseUser" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseUser" level="project" />
     <orderEntry type="library" exported="" name="SendCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_SendCallback" level="project" />
     <orderEntry type="library" exported="" name="Parse-1.4.2.jar" level="project" />
     <orderEntry type="library" exported="" name="ParseClassName" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseClassName" level="project" />
     <orderEntry type="library" exported="" name="ParseCloud" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseCloud" level="project" />
     <orderEntry type="library" exported="" name="GetDataCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_GetDataCallback" level="project" />
     <orderEntry type="library" exported="" name="ParseFacebookUtils" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseFacebookUtils" level="project" />
     <orderEntry type="library" exported="" name="ParseException" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseException" level="project" />
     <orderEntry type="library" exported="" name="ProgressCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_ProgressCallback" level="project" />
     <orderEntry type="library" exported="" name="RequestPasswordResetCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_RequestPasswordResetCallback" level="project" />
     <orderEntry type="library" exported="" name="ParseTwitterUtils" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseTwitterUtils" level="project" />
     <orderEntry type="library" exported="" name="constant-values" level="project" />
     <orderEntry type="library" exported="" name="style" level="project" />
     <orderEntry type="library" exported="" name="ParseAnalytics" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseAnalytics" level="project" />
     <orderEntry type="library" exported="" name="ParseQuery" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseQuery" level="project" />
     <orderEntry type="library" exported="" name="SaveCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_SaveCallback" level="project" />
     <orderEntry type="library" exported="" name="ParseQuery.CachePolicy" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseQuery.CachePolicy" level="project" />
     <orderEntry type="library" exported="" name="package-summary" level="project" />
     <orderEntry type="library" exported="" name="ParseRole" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseRole" level="project" />
     <orderEntry type="library" exported="" name="RefreshCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_RefreshCallback" level="project" />
     <orderEntry type="library" exported="" name="package-list" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-19.1.0" level="project" />
     <orderEntry type="library" exported="" name="CountCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_CountCallback" level="project" />
     <orderEntry type="library" exported="" name="serialized-form" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-19.0.1" level="project" />
     <orderEntry type="library" exported="" name="third_party_licenses" level="project" />
     <orderEntry type="library" exported="" name="ParseFile" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseFile" level="project" />
     <orderEntry type="library" exported="" name="LogInCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_LogInCallback" level="project" />
     <orderEntry type="library" exported="" name="GetCallback" level="project" />
+    <orderEntry type="library" exported="" name="1_GetCallback" level="project" />
     <orderEntry type="library" exported="" name="Parse" level="project" />
+    <orderEntry type="library" exported="" name="1_Parse" level="project" />
     <orderEntry type="library" exported="" name="package-tree" level="project" />
     <orderEntry type="library" exported="" name="allclasses-noframe" level="project" />
     <orderEntry type="library" exported="" name="ParseInstallation" level="project" />
+    <orderEntry type="library" exported="" name="1_ParseInstallation" level="project" />
   </component>
 </module>
 
