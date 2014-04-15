@@ -164,10 +164,9 @@ public class TaskScreen extends ActionBarActivity {
                         for (int i = taskAdapter.getCount(); i >= 0; i--) {
 
                             if (taskList.isItemChecked(i)) {
-                                tasks.remove(i);
-                                Log.w("Gring", "thingy " + tasks.get(i));
                                 Task task = tasks.get(i);
                                 database.delete(dbHelper.TABLE_TASK, dbHelper.KEY_ID + "=" + task.getId(), null);
+                                tasks.remove(i);
                             }
                         }
                         taskAdapter.notifyDataSetChanged();
