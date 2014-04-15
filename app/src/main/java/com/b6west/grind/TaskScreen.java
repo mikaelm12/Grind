@@ -1,7 +1,6 @@
 package com.b6west.grind;
 
 import android.annotation.TargetApi;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,7 +8,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +21,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
@@ -37,8 +35,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TaskScreen extends ActionBarActivity {
     ListView taskList;
@@ -60,42 +56,7 @@ public class TaskScreen extends ActionBarActivity {
         taskList = (ListView)findViewById(R.id.lvTaskList);
 
         taskList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        taskList.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-            @Override
-            public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
 
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-
-                MenuInflater inflater = actionMode.getMenuInflater();
-                inflater.inflate(R.menu.task_list_context, menu);
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode actionMode, MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.menu_delete_task:
-
-
-
-                        //Delete from data base and notify adapter of change
-                }
-                return true;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode actionMode) {
-
-            }
-        });
 
         addTaskPrompt = (TextView)findViewById(R.id.tvAddTaskPrompt);
 
@@ -103,7 +64,7 @@ public class TaskScreen extends ActionBarActivity {
         dbHelper = new TaskDatabaseHelper(this);
         displayData();
 
-        TaskAdapter taskAdapter = new TaskAdapter(tasks);
+        final TaskAdapter taskAdapter = new TaskAdapter(tasks);
         taskList.setAdapter(taskAdapter);
 
 
@@ -134,6 +95,74 @@ public class TaskScreen extends ActionBarActivity {
                     intent.putExtra("difficulty", selectedTask.getDifficulty());
                     startActivity(intent);
                 }
+            }
+        });
+
+        taskList.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
+
+                taskAdapter.getItem(i).setSelected(!taskAdapter.getItem(i).selected);
+                taskAdapter.notifyDataSetChanged();
+
+
+
+
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+
+                MenuInflater inflater = actionMode.getMenuInflater();
+                inflater.inflate(R.menu.task_list_context, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode actionMode, MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menu_delete_task:
+
+                        for (int i = taskAdapter.getCount(); i >=0; i--){
+
+                            if (taskList.isItemChecked(i)){
+                                tasks.remove(i);
+
+                            }
+                        }
+                            taskAdapter.notifyDataSetChanged();
+                            actionMode.finish();
+
+
+
+
+                        return true;
+                    default:
+                        return false;     //Delete from data base and notify adapter of change
+                }
+
+
+
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode actionMode) {
+
+
+                //for (int i = taskAdapter.getCount(); i >=0; i--){
+
+                  // taskAdapter.getItem(i).setSelected(false);
+                //}
+                //taskAdapter.notifyDataSetChanged();
+                //actionMode.finish();
+
+
+
             }
         });
 
@@ -208,7 +237,7 @@ public class TaskScreen extends ActionBarActivity {
             if (convertView == null) {
                 holder = new ViewHolder();
 
-                convertView = TaskScreen.this.getLayoutInflater().inflate(R.layout.task_row, null);
+                convertView = TaskScreen.this.getLayoutInflater().inflate(R.layout.list_item_task, null);
 
                 //working with the checkbox
                 holder.taskTitle = (TextView) convertView.findViewById(R.id.tvTaskTitle);
@@ -249,10 +278,13 @@ public class TaskScreen extends ActionBarActivity {
 
             if (convertView != null) {
                 int score = task.getScore();
-                if (score > 27){
+                if(task.selected){
+                    convertView.setBackgroundColor(Color.parseColor("#8A8282")); //grey
+                }
+                else if (score > 25){
                         convertView.setBackgroundColor(Color.parseColor("#ff5f4a")); //dark red
                 }
-                else if(score > 25){
+                else if(score > 23){
                         convertView.setBackgroundColor(Color.parseColor("#fd8a67")); //orange red
                 }
                  else if(score > 20 ){

@@ -15,7 +15,20 @@ public class Task {
     public int difficulty = 0;
     public int importance = 0;
     public String category;
+
+
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
+    }
+
+    public Boolean selected = false;
     public Date dueDate = null;
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public int score;
     public boolean completed = false;
 
