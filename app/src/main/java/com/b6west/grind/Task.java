@@ -116,12 +116,10 @@ public class Task {
         if (completed) {
             score = -1;
         } else {
-            Log.w("Grind", "task date: " + this.getDueDate());
 
             if (this.getDueDate() == null ) {
                 score = 0;
             } else {
-                Log.w("Grind", "task imp: " + importance);
                 long diffInMillisec = (new Date()).getTime() - this.getDueDate().getTime();
 
                 long diffInDays = (diffInMillisec / (24 * 60 * 60 * 1000));
