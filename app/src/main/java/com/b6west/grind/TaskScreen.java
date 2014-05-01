@@ -1,6 +1,7 @@
 package com.b6west.grind;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,11 +25,12 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.b6west.grind.database.TaskDatabaseHelper;
-import com.parse.Parse;
-import com.parse.ParseAnalytics;
+//import com.parse.Parse;
+//import com.parse.ParseAnalytics;
 //import com.parse.Parse;
 //import com.parse.ParseAnalytics;
 
@@ -202,6 +204,28 @@ public class TaskScreen extends ActionBarActivity {
         //for analytics if we need it
 //        Parse.initialize(this, "unglciIFqSiLlkBuzEpkOlE4eQhoq7FWqGDFLmaA", "Tx1sNxriLDdElnXgTKZrLZ9hN8zlOkAUBiUu3PnC");
 //        ParseAnalytics.trackAppOpened(getIntent());
+
+        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this,
+                R.array.action_list, android.R.layout.simple_spinner_dropdown_item);
+
+        ActionBar.OnNavigationListener mOnNavigationListener = new ActionBar.OnNavigationListener() {
+            // Get the same strings provided for the drop-down's ArrayAdapter
+            String[] strings = getResources().getStringArray(R.array.action_list);
+
+            @Override
+            public boolean onNavigationItemSelected(int position, long itemId) {
+                // Create new fragment from our own Fragment class
+
+
+
+                return true;
+            }
+
+        };
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
+
     }
 
     /**
