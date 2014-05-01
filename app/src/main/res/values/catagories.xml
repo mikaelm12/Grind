@@ -5,5 +5,6 @@
         <item>Importance</item>
         <item>Difficulty</item>
         <item>Due Date</item>
+        <item>Date Added</item>
     </string-array>
 </resources>

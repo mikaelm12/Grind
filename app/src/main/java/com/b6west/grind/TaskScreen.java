@@ -50,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class TaskScreen extends ActionBarActivity {
     ListView taskList;
@@ -219,7 +220,13 @@ public class TaskScreen extends ActionBarActivity {
             public boolean onNavigationItemSelected(int position, long itemId) {
                 // Create new fragment from our own Fragment class
 
+               if(position > 1){
+                taskAdapter.clear();
+                List<Task> filterTaskList = new ArrayList<Task>();
+                //Populate
 
+                taskAdapter.notifyDataSetChanged();
+               }
 
                 return true;
             }
@@ -312,7 +319,13 @@ public class TaskScreen extends ActionBarActivity {
 
 
             final int pos = position;
-            holder.taskTitle.setText(tasks.get(position).getTitle());
+            if(tasks.get(position).getTitle().length() > 25){
+                holder.taskTitle.setText(tasks.get(position).getTitle().substring(0,20));
+            }
+            else{
+                holder.taskTitle.setText(tasks.get(position).getTitle());
+            }
+
             holder.taskCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     Task selectedTask = tasks.get(pos);
