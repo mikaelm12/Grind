@@ -291,6 +291,26 @@ public class TaskScreen extends ActionBarActivity {
                 taskAdapter.addAll(tasks);
                 taskAdapter.notifyDataSetChanged();
 
+
+                /////// log to the CSV file ///////////////////
+                String FILENAME = "grindSort.csv";
+                String entry = position + "\n";
+                File externalDir = getExternalFilesDir(null);
+                String filePath = externalDir + "/" + FILENAME;
+                File file = new File(externalDir, FILENAME);
+
+                try {
+                    FileWriter fileWriter = new FileWriter(file,true);
+                    //Use BufferedWriter instead of FileWriter for better performance
+                    BufferedWriter bufferFileWriter  = new BufferedWriter(fileWriter);
+                    fileWriter.append(entry);
+                    //Don't forget to close Streams or Reader to free FileDescriptor associated with it
+                    bufferFileWriter.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //////////////////////////////////////////////
+
                 return true;
             }
 
