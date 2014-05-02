@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="action_list">
+        <item>Date Added</item>
+        <item>Due Date</item>
         <item>Score</item>
         <item>Importance</item>
         <item>Difficulty</item>
-        <item>Due Date</item>
-        <item>Date Added</item>
     </string-array>
 </resources>

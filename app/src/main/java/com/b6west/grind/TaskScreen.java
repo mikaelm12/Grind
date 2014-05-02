@@ -49,6 +49,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -56,14 +58,14 @@ public class TaskScreen extends ActionBarActivity {
     ListView taskList;
     TextView addTaskPrompt;
 
-
     private TaskDatabaseHelper dbHelper;
     private SQLiteDatabase database;
 
     //list view list from SQL
-    private ArrayList<Task> tasks = new ArrayList<Task>();
+    private List<Task> tasks = new ArrayList<Task>();
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,10 +177,12 @@ public class TaskScreen extends ActionBarActivity {
                                 tasks.remove(i);
                             }
                         }
+                        taskAdapter.clear();
+                        taskAdapter.addAll(tasks);
+                        Log.w("Grind", tasks.toString());
                         taskAdapter.notifyDataSetChanged();
+
                         actionMode.finish();
-
-
                         return true;
                     default:
                         return false;     //Delete from data base and notify adapter of change
@@ -202,13 +206,7 @@ public class TaskScreen extends ActionBarActivity {
             }
         });
 
-
-
-        //initialize Parse
-        //for analytics if we need it
-//        Parse.initialize(this, "unglciIFqSiLlkBuzEpkOlE4eQhoq7FWqGDFLmaA", "Tx1sNxriLDdElnXgTKZrLZ9hN8zlOkAUBiUu3PnC");
-//        ParseAnalytics.trackAppOpened(getIntent());
-
+        // SPINNER
         SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.action_list, android.R.layout.simple_spinner_dropdown_item);
 
@@ -220,13 +218,78 @@ public class TaskScreen extends ActionBarActivity {
             public boolean onNavigationItemSelected(int position, long itemId) {
                 // Create new fragment from our own Fragment class
 
-               if(position > 1){
-                taskAdapter.clear();
-                List<Task> filterTaskList = new ArrayList<Task>();
-                //Populate
+                String query = "";
+                switch(position) {
+                    case 0:
+                        query = "SELECT * FROM " + dbHelper.TABLE_TASK;
+                        tasks = getTasksFromQuery(query);
+                        break;
+                    case 1:
+                        query = "SELECT * FROM " + dbHelper.TABLE_TASK + " ORDER BY " + dbHelper.KEY_DATE + " DESC";
+                        tasks = getTasksFromQuery(query);
 
+                        Collections.sort(tasks, new Comparator<Task>() {
+                            @Override
+                            public int compare (Task t1, Task t2) {
+                                if (t1.getDueDate() != null && t2.getDueDate() != null ) {
+                                   return t1.getDueDate().compareTo(t2.getDueDate());
+                                } else if (t1.getDueDate() == null && t2.getDueDate() == null) {
+                                   return 0; // t1 and t2 are equal
+                                } else if (t1.getDueDate() == null) { // t2's date is NOT null
+                                    return 1; // t2 sorts earlier in the list, t2 < t1
+                                } else { // t2's date is null
+                                    return -1; // t1 sorts earlier in the list, t1 < t2
+                                }
+                            }
+                        });
+
+                        break;
+                    case 2:
+                        query = "SELECT * FROM " + dbHelper.TABLE_TASK;
+                        tasks = getTasksFromQuery(query);
+
+                        Collections.sort(tasks, new Comparator<Task>() {
+                        @Override
+                            public int compare (Task t1, Task t2) {
+                                // sort by DESC order
+                                if (t1.getScore() > t2.getScore() ) {
+                                    return -1; // put t1 earlier in the list
+                                } else if ( t1.getScore() < t2.getScore() ) {
+                                    return 1; // put t2 earlier in the list
+                                } else {
+                                    return 0; // equal scores
+                                }
+                            }
+                        });
+
+                        break;
+                    case 3:
+                        query = "SELECT * FROM " + dbHelper.TABLE_TASK + " ORDER BY " + dbHelper.KEY_IMPORTANCE + " DESC";
+                        tasks = getTasksFromQuery(query);
+                        break;
+                    case 4:
+                        query = "SELECT * FROM " + dbHelper.TABLE_TASK + " ORDER BY " + dbHelper.KEY_DIFFICULTY + " DESC";
+                        tasks = getTasksFromQuery(query);
+                        break;
+                    default:
+                }
+
+                Collections.sort(tasks, new Comparator<Task>() {
+                    @Override
+                    public int compare (Task t1, Task t2) {
+                        if (t1.completed && !t2.completed) {
+                            return 1;
+                        } else if ( !t1.completed && t2.completed ) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                });
+
+                taskAdapter.clear();
+                taskAdapter.addAll(tasks);
                 taskAdapter.notifyDataSetChanged();
-               }
 
                 return true;
             }
@@ -235,8 +298,47 @@ public class TaskScreen extends ActionBarActivity {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
+    }
 
+    public List<Task> getTasksFromQuery(String query) {
+        database = dbHelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery(query, null);
+        List<Task> filterTaskList = new ArrayList<Task>();
 
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            //get dateString from SQL
+            String dateString = cursor.getString(cursor.getColumnIndex(dbHelper.KEY_DATE));
+
+            if (dateString == null) {
+                //add from SQL to the task list
+                Task task = new Task(cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_ID)),
+                        cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)),
+                        cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_IMPORTANCE)),
+                        cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)),
+                        cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_COMPLETED)));
+                filterTaskList.add(task);
+                int i = task.completed ? 1 : 0;
+            } else {
+                try {
+                    //convert SQL date string to Date object
+                    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+                    //make new task and add it to task list
+                    Task task = new Task(cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_ID)),
+                            cursor.getString(cursor.getColumnIndex(dbHelper.KEY_TITLE)),
+                            date,
+                            cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_IMPORTANCE)),
+                            cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_DIFFICULTY)),
+                            cursor.getInt(cursor.getColumnIndex(dbHelper.KEY_COMPLETED)));
+                    filterTaskList.add(task);
+                    int i = task.completed ? 1 : 0;
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        cursor.close();
+
+        return filterTaskList;
     }
 
     /**
@@ -289,7 +391,7 @@ public class TaskScreen extends ActionBarActivity {
         TextView date;
         Task task;
 
-        public TaskAdapter(ArrayList<Task> taskArrayList){
+        public TaskAdapter(List<Task> taskArrayList){
             super(TaskScreen.this, 0 ,taskArrayList );
         }
 
@@ -319,12 +421,7 @@ public class TaskScreen extends ActionBarActivity {
 
 
             final int pos = position;
-            if(tasks.get(position).getTitle().length() > 25){
-                holder.taskTitle.setText(tasks.get(position).getTitle().substring(0,20));
-            }
-            else{
-                holder.taskTitle.setText(tasks.get(position).getTitle());
-            }
+
 
             holder.taskCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -337,7 +434,7 @@ public class TaskScreen extends ActionBarActivity {
                     database = dbHelper.getWritableDatabase();
 
                     ContentValues data = new ContentValues();
-                    data.put(dbHelper.KEY_COMPLETED,completed);
+                    data.put(dbHelper.KEY_COMPLETED, completed);
                     database.update(dbHelper.TABLE_TASK, data, dbHelper.KEY_ID + "=" + selectedTask.getId(), null);
                     database.close();
 
